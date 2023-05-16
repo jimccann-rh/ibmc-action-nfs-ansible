@@ -25,6 +25,6 @@
 
   - name: Start NFS service
     service:
-      name: nfs
+      name: nfs-server
       state: started
       enabled: yes

@@ -1,0 +1,30 @@
+---
+- hosts: all
+  tasks:
+  - name: Install NFS server
+    package:
+      name: nfs-utils
+      state: present
+
+  - name: Create export file
+    file:
+      path: /etc/exports
+      state: touch
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: Add export to file
+    lineinfile:
+      path: /etc/exports
+      line: /export/share *(sync)
+      state: present
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: Start NFS service
+    service:
+      name: nfs
+      state: started
+      enabled: yes

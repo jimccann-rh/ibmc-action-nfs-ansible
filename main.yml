@@ -1,30 +1,74 @@
 ---
 - hosts: all
+
   tasks:
-  - name: Install NFS server
-    package:
-      name: nfs-utils
-      state: present
 
-  - name: Create export file
-    file:
-      path: /etc/exports
-      state: touch
-      owner: root
-      group: root
-      mode: 0644
+    - name: set up mount point for isos
+      block:
+        - name: Create new partition
+          parted:
+            device: /dev/xvdc
+            number: 1
+            state: present
+            fs_type: ext4
+      
+        - name: Format new partition
+          filesystem:
+            dev: /dev/xvdc
+            fstype: ext4
+      
+        - name: Mount new partition
+          mount:
+            src: /dev/xvdc
+            path: /data
+            fstype: ext4
+            state: mounted
+      when: ansible_facts.mounts | selectattr('mount', '==', '/data') | length == 0
+  
+    - name: Install NFS server
+      package:
+        name: nfs-utils
+        state: present
+  
+    - name: Create export file
+      file:
+        path: /etc/exports
+        state: touch
+        owner: root
+        group: root
+        mode: 0644
+  
+    - name: Add export to file
+      lineinfile:
+        path: /etc/exports
+        line: /data/export/share *(sync)
+        state: present
+        owner: root
+        group: root
+        mode: 0644
+  
+    - name: Start NFS service
+      service:
+        name: nfs-server
+        state: started
+        enabled: yes
+  
+    - name: Create directory
+      file:
+        path: /data/export/share
+        state: directory
+        mode: 0755
+  
+    - name: Copy ISO file esxi
+      copy:
+        src: ~/Downloads/VMware-VMvisor-Installer-7.0U3l-21424296.x86_64.iso
+        dest: /data/export/share/VMware-VMvisor-Installer-7.0U3l-21424296.x86_64.iso
+        mode: 0644
+  
+    - name: Copy ISO file vcenter
+      copy:
+        src: ~/Downloads/VMware-VCSA-all-7.0.3-21477706.iso
+        dest: /data/export/share/VMware-VCSA-all-7.0.3-21477706.iso
+        mode: 0644
 
-  - name: Add export to file
-    lineinfile:
-      path: /etc/exports
-      line: /export/share *(sync)
-      state: present
-      owner: root
-      group: root
-      mode: 0644
-
-  - name: Start NFS service
-    service:
-      name: nfs-server
-      state: started
-      enabled: yes
+                                                     

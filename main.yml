@@ -34,7 +34,12 @@
       package:
         name: nfs-utils
         state: present
-  
+ 
+    - name: Install NFS server
+      package:
+        name: bind-utils
+        state: present
+ 
     - name: Create export file
       file:
         path: /etc/exports

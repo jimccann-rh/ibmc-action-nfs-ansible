@@ -76,26 +76,26 @@
   
     - name: Create directory
       file:
-        path: "/{{ mountpath }}/export/share"
+        path: "{{ mountpath }}/export/share"
         state: directory
         mode: 0755
  
     - name: Create directory
       file:
-        path: "/{{ mountpath }}/export/backups"
+        path: "{{ mountpath }}/export/backups"
         state: directory
         mode: 0777
  
     - name: Copy ISO file esxi
       copy:
         src: "~/Downloads/{{ esxiiso }}"
-        dest: "/data/export/share/{{ esxiiso}}"
+        dest: "{{ mountpath }}/export/share/{{ esxiiso}}"
         mode: 0644
   
     - name: Copy ISO file vcenter
       copy:
         src: "~/Downloads/{{ vcenteriso }}"
-        dest: "/data/export/share/{{ vcenteriso }}"
+        dest: "{{ mountpath }}/export/share/{{ vcenteriso }}"
         mode: 0644
 
                                                      

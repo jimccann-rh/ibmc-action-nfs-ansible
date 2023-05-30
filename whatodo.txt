@@ -1,0 +1,1 @@
+ansible-playbook --private-key ../../ibmc-devqe.pem -i inventory.ini main.yml --extra-vars ansible_user=root

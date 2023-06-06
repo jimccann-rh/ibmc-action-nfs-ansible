@@ -7,6 +7,7 @@
 #    vcenteriso: 'VMware-VCSA-all-7.0.3-21477706.iso'
     mountdev: '/dev/xvdc'
     mountpath: '/data'
+    copyiso: false
 
   tasks:
 
@@ -91,11 +92,27 @@
         src: "~/Downloads/{{ esxiiso }}"
         dest: "{{ mountpath }}/export/share/{{ esxiiso}}"
         mode: 0644
+      when: copyiso | bool
   
     - name: Copy ISO file vcenter
       copy:
         src: "~/Downloads/{{ vcenteriso }}"
         dest: "{{ mountpath }}/export/share/{{ vcenteriso }}"
         mode: 0644
+      when: copyiso | bool
 
-                                                     
+    - name: Install govc cli
+      shell: 'curl -L -o - "https://github.com/vmware/govmomi/releases/latest/download/govc_$(uname -s)_$(uname -m).tar.gz" | tar -C /usr/local/bin -xvzf - govc'
+                                                    
+    - name: Install ibmcloud cli
+      shell: 'curl -fsSL https://clis.cloud.ibm.com/install/linux | sh'
+
+
+    - name: Install ibmcloud plugins
+      shell: '{{ item }}'
+      loop:
+        - ibmcloud cf install -f
+        - ibmcloud plugin install vpc-infrastructure -f
+        - ibmcloud plugin install cloud-dns-services -f
+        - ibmcloud plugin install cloud-object-storage -f
+        - ibmcloud plugin install schematics -f

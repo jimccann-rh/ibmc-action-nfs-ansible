@@ -1,11 +1,6 @@
 ---
-- hosts: all
+- hosts: localhost
   vars:
-    esxiiso: 'VMware-VMvisor-Installer-8.0U2-22380479.x86_64.iso'
-    vcenteriso: 'VMware-VCSA-all-8.0.2-22617221.iso'
-    mountdev: '/dev/xvdc'
-    mountpath: '/data'
-    installtools: false
     virtual_instance_0_ip: "10.184.218.85"
 # tag copyiso to push isos
 
@@ -15,7 +10,25 @@
         ansible_host: "{{ virtual_instance_0_ip }}"
         group: management
 
+#    - name: Set authorized key taken from file
+#      ansible.posix.authorized_key:
+#        user: root
+#        state: present
+#        key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
+
+#    - name: Install collection parted
+#      community.general.ansible_galaxy_install:
+#        type: collection
+#        name: community.general.parted
+
 - hosts: management
+  vars:
+    esxiiso: 'VMware-VMvisor-Installer-8.0U2-22380479.x86_64.iso'
+    vcenteriso: 'VMware-VCSA-all-8.0.2-22617221.iso'
+    mountdev: '/dev/xvdc'
+    mountpath: '/data'
+    installtools: false
+
   tasks:
     - name: set up mount point for isos
       block:
@@ -132,3 +145,4 @@
             - ibmcloud plugin install cloud-object-storage -f
             - ibmcloud plugin install schematics -f
       when: installtools | bool
+

@@ -1,4 +1,7 @@
 dnf install ansible-core -y && ansible-galaxy collection install community.general && ansible-galaxy collection install ansible.posix
+ansible-galaxy collection install --force --requirements-file requirements.yaml
+
 ansible-playbook --private-key ../../ibmc-devqe.pem -i inventory.ini main.yml --extra-vars ansible_user=root
 ansible-playbook --private-key ../../../../id_rsa -i inventory.ini main.yml --extra-vars ansible_user=root --tag copyiso
+ansible-playbook --private-key ../../../../id_rsa -i inventory-bastion.ini main.yml --extra-vars ansible_user=root 
 ansible-playbook -i inventory-bastion.ini main-bastion.yml --extra-vars ansible_user=root

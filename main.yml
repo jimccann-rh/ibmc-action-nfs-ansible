@@ -10,6 +10,9 @@
 
   tasks:
 
+    - debug:
+        msg: "{{ ansible_facts }}"
+
     - name: set up mount point for isos
       block:
         - name: "Create {{ mountdev }} partition"

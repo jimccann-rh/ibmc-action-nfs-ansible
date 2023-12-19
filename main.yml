@@ -13,7 +13,8 @@
     - debug:
         msg: 
          #- "{{ ansible_facts }}"
-         - "{{ ansible_facts.mounts | selectattr('mount', '==', '/data') }}"
+         #- "{{ ansible_facts.mounts | selectattr('mount', '==', '/data') }}"
+         - "{{ ansible_facts.mounts }}"
 
     - name: set fact for mount point
       set_fact:

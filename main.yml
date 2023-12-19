@@ -11,7 +11,17 @@
   tasks:
 
     - debug:
-        msg: "{{ ansible_facts }}"
+        msg: 
+         #- "{{ ansible_facts }}"
+         - "{{ ansible_facts.mounts | selectattr('mount', '==', '/data') }}"
+
+    - name: set fact for mount point
+      set_fact:
+        mountpoint: "{{ ansible_facts.mounts | selectattr('mount', '==', '/data') }}"
+
+    - debug:
+        msg: 
+          - "{{ mountpoint[0].mount }}"
 
     - name: set up mount point for isos
       block:
@@ -33,7 +43,8 @@
             path: "{{ mountpath }}"
             fstype: ext4
             state: mounted
-      when: ansible_facts.mounts | selectattr('mount', '==', '/data') | length == 0
+      when: mountpoint[0].mount != "/data" 
+      #when: ansible_facts.mounts | selectattr('mount', '==', '/data') | length == 0
   
     - name: Install NFS server
       package:

@@ -12,14 +12,11 @@
 
     - debug:
         msg: 
-         #- "{{ ansible_facts }}"
-         #- "{{ ansible_facts.mounts | selectattr('mount', '==', '/data') }}"
          - "{{ ansible_facts.mounts }}"
 
     - name: set fact for mount point
       set_fact:
         mountpoint: "{{ ansible_facts.mounts | selectattr('mount', 'equalto', '/data') | list }}"
-        #mountpoint: "{{ ansible_facts.mounts | selectattr('mount', '==', '/data') }}"
 
     - debug:
         msg: 
@@ -46,7 +43,6 @@
             fstype: ext4
             state: mounted
       when: mountpoint[0].mount != "/data" 
-      #when: ansible_facts.mounts | selectattr('mount', '==', '/data') | length == 0
   
     - name: Install NFS server
       package:

@@ -18,7 +18,8 @@
 
     - name: set fact for mount point
       set_fact:
-        mountpoint: "{{ ansible_facts.mounts | selectattr('mount', '==', '/data') }}"
+        mountpoint: "{{ ansible_facts.mounts | selectattr('mount', 'equalto', '/data') | list }}"
+        #mountpoint: "{{ ansible_facts.mounts | selectattr('mount', '==', '/data') }}"
 
     - debug:
         msg: 

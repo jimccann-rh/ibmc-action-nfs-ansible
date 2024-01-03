@@ -131,7 +131,7 @@
         - name: Install ibmcloud plugins (Need gateway set up)
           shell: '{{ item }}'
           loop:
-            - ibmcloud cf install -f
+#            - ibmcloud cf install -f
             - ibmcloud plugin install vpc-infrastructure -f
             - ibmcloud plugin install cloud-dns-services -f
             - ibmcloud plugin install cloud-object-storage -f

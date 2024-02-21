@@ -55,6 +55,9 @@
         name: ansible-core
         state: present
 
+    - name: Install community.general
+      shell: 'ansible-galaxy collection install community.general'
+
     - name: Install bind utils dig
       package:
         name: bind-utils

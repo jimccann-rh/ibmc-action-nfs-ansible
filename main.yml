@@ -57,9 +57,6 @@
         name: ansible-core
         state: present
 
-    - name: Install community.general
-      shell: 'ansible-galaxy collection install community.general'
-
     - name: Install bind utils dig
       package:
         name: bind-utils
@@ -132,8 +129,12 @@
         - copyiso
         - never
 
-    - name: Install, configure, and start Apache
+    - name: Install, configure, govc, ibmcloud cli
       block:
+
+        - name: Install community.general
+          shell: 'ansible-galaxy collection install community.general'
+
         - name: Install govc cli (Need gateway set up)
           shell: 'curl -L -o - "https://github.com/vmware/govmomi/releases/latest/download/govc_$(uname -s)_$(uname -m).tar.gz" | tar -C /usr/local/bin -xvzf - govc'
                                                         

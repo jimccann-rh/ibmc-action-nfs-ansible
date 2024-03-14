@@ -44,9 +44,8 @@
             path: "{{ mountpath }}"
             fstype: ext4
             state: mounted
-      when: mountpoint | length < 0 
-      #when: mountpoint[0].mount != "/data" 
-  
+      when: mountpoint == []
+      
     - name: Install NFS server
       package:
         name: nfs-utils
